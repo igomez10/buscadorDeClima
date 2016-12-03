@@ -1,0 +1,85 @@
+<html>
+
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+
+<body align=center>
+  <div id=app>
+    <div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+    <h1><strong>BUSCADOR DE CLIMA</strong></h1>
+    <title>Buscador de Clima</title>
+    <div>
+      <input type="text" placeholder="Ciudad Buscada" v-model="selectedCity"></input>
+      <hr>
+      <h1>Clima para la ciudad de: {{selectedCity}}</h1>
+    </div>
+    <!-- CURRENT WEATHER -->
+    <div v-if="isReady">
+      <img :src=weather.body.current.condition.icon>
+      <h4><label>Temperature:</label>{{weather.body.current.temp_c}}</h4>
+    </div>
+  </div>
+</body>
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!',
+    selectedCity:'',
+    requestedCity:'',
+    loadedData:false,
+    weather:"",
+    isReady:false,
+  },
+  watch:{
+    selectedCity:function(){
+      this.requestedCity=this.selectedCity;
+      this.requestData(this.selectedCity)
+    }
+  },
+  methods:{
+    requestData: _.debounce(
+      function(city){
+        this.$http.get('https://api.apixu.com/v1/current.json?key=ea0007addb304b6cbe701355160312&q=' + this.requestedCity)
+        .then(function(response){
+          console.log(response)
+          this.weather=response
+          this.isReady=true
+
+        })
+      }
+      ,300)
+    }
+
+  })
+  </script>
+
+  </html>
